@@ -1,3 +1,5 @@
+[![Rust](https://github.com/drumath2237/raytrace-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/drumath2237/raytrace-rs/actions/workflows/rust.yml)
+
 # raytrace-rs (WIP)
 
 ## About
