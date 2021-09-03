@@ -2,13 +2,13 @@ use std::ops;
 
 #[derive(Debug)]
 pub struct Vector3 {
-    pub x: i32,
-    pub y: i32,
-    pub z: i32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 impl Vector3 {
-    pub fn new(_x: i32, _y: i32, _z: i32) -> Vector3 {
+    pub fn new(_x: f32, _y: f32, _z: f32) -> Vector3 {
         return Vector3 {
             x: _x,
             y: _y,
@@ -52,23 +52,23 @@ mod vector_test {
 
     #[test]
     fn vector_new_test() {
-        assert_eq!(Vector3::new(1, 2, 3), Vector3 { x: 1, y: 2, z: 3 });
+        assert_eq!(Vector3::new(1.0, 2.0, 3.0), Vector3 { x: 1.0, y: 2.0, z: 3.0 });
     }
 
     #[test]
     fn add_test() {
-        let v1 = Vector3::new(1, 2, 3);
-        let v2 = Vector3::new(2, 3, 4);
+        let v1 = Vector3::new(1.0, 2.0, 3.0);
+        let v2 = Vector3::new(2.0, 3.0, 4.0);
 
-        assert_eq!(v1 + v2, Vector3::new(3, 5, 7));
+        assert_eq!(v1 + v2, Vector3::new(3.0, 5.0, 7.0));
     }
 
     #[test]
     fn vector_sub_test() {
-        let v1 = Vector3::new(1, 2, 3);
-        let v2 = Vector3::new(1, 0, 0);
+        let v1 = Vector3::new(1.0, 2.0, 3.0);
+        let v2 = Vector3::new(1.0, 0.0, 0.0);
 
-        assert_eq!(v1 - v2, Vector3::new(0, 2, 3));
+        assert_eq!(v1 - v2, Vector3::new(0.0, 2.0, 3.0));
     }
 }
 
