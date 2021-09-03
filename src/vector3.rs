@@ -21,14 +21,31 @@ impl Vector3 {
     }
 
     pub fn normalize(v: Vector3) -> Vector3 {
-        todo!()
+        return Vector3::new(
+            v.x / v.length(),
+            v.y / v.length(),
+            v.z / v.length(),
+        );
     }
 
-    pub fn length(&self) -> f64 { todo!(); }
+    pub fn length(&self) -> f64 {
+        let l2 = self.x * self.x + self.y * self.y + self.z * self.z;
+        return l2.sqrt();
+    }
 
-    pub fn dot(v1: Vector3, v2: Vector3) -> f64 { todo!(); }
+    pub fn dot(v1: Vector3, v2: Vector3) -> f64 {
+        return v1.x * v2.x +
+            v1.y * v2.y +
+            v1.z * v2.z;
+    }
 
-    pub fn cross(v1: Vector3, v2: Vector3) -> Vector3 { todo!() }
+    pub fn cross(v1: Vector3, v2: Vector3) -> Vector3 {
+        return Vector3::new(
+            v1.y * v2.z - v1.z * v2.y,
+            v1.z * v2.x - v1.x * v2.z,
+            v1.x * v2.y - v1.y * v2.x,
+        );
+    }
 }
 
 impl ops::Add<Vector3> for Vector3 {
@@ -47,7 +64,11 @@ impl ops::Sub<Vector3> for Vector3 {
     type Output = Vector3;
 
     fn sub(self, rhs: Vector3) -> Self::Output {
-        todo!()
+        Vector3::new(
+            self.x - rhs.x,
+            self.y - rhs.y,
+            self.z - rhs.z,
+        )
     }
 }
 
@@ -63,7 +84,6 @@ impl std::cmp::PartialEq for Vector3 {
 #[cfg(test)]
 mod vector_test {
     use crate::vector3::Vector3;
-    use std::num::*;
 
     #[test]
     fn vector_new_test() {
@@ -96,16 +116,16 @@ mod vector_test {
         let vec = Vector3::zero();
         assert_eq!(vec.length(), 0.0);
 
-        let vec = Vector3::new(1.0, 0.0, 0.0);
+        let vec = Vector3::new(1.0, 1.0, 1.0);
 
-        assert_eq!(vec.length(), 1.0);
+        assert_eq!(vec.length(), (3.0 as f64).sqrt());
     }
 
     #[test]
     fn normalize_test() {
         let vec = Vector3::new(1.0, 1.0, 1.0);
         assert_eq!(Vector3::normalize(vec),
-                   Vector3::new((3.0 as f64).sqrt(), (3.0 as f64).sqrt(), (3.0 as f64).sqrt()))
+                   Vector3::new(1.0 / (3.0 as f64).sqrt(), 1.0 / (3.0 as f64).sqrt(), 1.0 / (3.0 as f64).sqrt()))
     }
 
     #[test]
