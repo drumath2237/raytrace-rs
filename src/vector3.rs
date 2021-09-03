@@ -20,7 +20,7 @@ impl Vector3 {
         return Vector3::new(0.0, 0.0, 0.0);
     }
 
-    pub fn normalize(v: Vector3) -> Vector3 {
+    pub fn normalize(v: &Vector3) -> Vector3 {
         return Vector3::new(
             v.x / v.length(),
             v.y / v.length(),
@@ -33,13 +33,13 @@ impl Vector3 {
         return l2.sqrt();
     }
 
-    pub fn dot(v1: Vector3, v2: Vector3) -> f64 {
+    pub fn dot(v1: &Vector3, v2: &Vector3) -> f64 {
         return v1.x * v2.x +
             v1.y * v2.y +
             v1.z * v2.z;
     }
 
-    pub fn cross(v1: Vector3, v2: Vector3) -> Vector3 {
+    pub fn cross(v1: &Vector3, v2: &Vector3) -> Vector3 {
         return Vector3::new(
             v1.y * v2.z - v1.z * v2.y,
             v1.z * v2.x - v1.x * v2.z,
@@ -80,6 +80,14 @@ impl std::cmp::PartialEq for Vector3 {
                 && self.z == other.z;
     }
 }
+
+impl Clone for Vector3 {
+    fn clone(&self) -> Self {
+        self::Vector3::new(self.x, self.y, self.z)
+    }
+}
+
+impl Copy for Vector3 {}
 
 #[cfg(test)]
 mod vector_test {
@@ -124,7 +132,7 @@ mod vector_test {
     #[test]
     fn normalize_test() {
         let vec = Vector3::new(1.0, 1.0, 1.0);
-        assert_eq!(Vector3::normalize(vec),
+        assert_eq!(Vector3::normalize(&vec),
                    Vector3::new(1.0 / (3.0 as f64).sqrt(), 1.0 / (3.0 as f64).sqrt(), 1.0 / (3.0 as f64).sqrt()))
     }
 
@@ -133,7 +141,7 @@ mod vector_test {
         let v1 = Vector3::new(1.0, 2.0, 3.0);
         let v2 = Vector3::new(2.0, 3.0, 4.0);
 
-        assert_eq!(Vector3::dot(v1, v2), 2.0 + 6.0 + 12.0);
+        assert_eq!(Vector3::dot(&v1, &v2), 2.0 + 6.0 + 12.0);
     }
 
     #[test]
@@ -141,7 +149,7 @@ mod vector_test {
         let v1 = Vector3::new(1.0, 2.0, 3.0);
         let v2 = Vector3::new(4.0, 5.0, 6.0);
 
-        assert_eq!(Vector3::cross(v1, v2), Vector3::new(-3.0, 6.0, -3.0));
+        assert_eq!(Vector3::cross(&v1, &v2), Vector3::new(-3.0, 6.0, -3.0));
     }
 }
 
