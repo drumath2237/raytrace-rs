@@ -72,6 +72,22 @@ impl ops::Sub<Vector3> for Vector3 {
     }
 }
 
+impl ops::Mul<f64> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Vector3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl ops::Div<f64> for Vector3 {
+    type Output = Vector3;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        Vector3::new(self.x / rhs, self.y / rhs, self.z / rhs)
+    }
+}
+
 impl std::cmp::PartialEq for Vector3 {
     fn eq(&self, other: &Vector3) -> bool {
         return
@@ -150,6 +166,18 @@ mod vector_test {
         let v2 = Vector3::new(4.0, 5.0, 6.0);
 
         assert_eq!(Vector3::cross(&v1, &v2), Vector3::new(-3.0, 6.0, -3.0));
+    }
+
+    #[test]
+    fn mul_test() {
+        let v = Vector3::new(1.0, 2.0, 3.0);
+        assert_eq!(v * 3.0, Vector3::new(3.0, 6.0, 9.0));
+    }
+
+    #[test]
+    fn div_test() {
+        let v = Vector3::new(3.0, 6.0, 9.0);
+        assert_eq!(v / 3.0, Vector3::new(1.0, 2.0, 3.0));
     }
 }
 
