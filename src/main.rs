@@ -1,6 +1,8 @@
 mod vector3;
+use crate::vector3::Vector3;
 
-use vector3::*;
+mod ray;
+use crate::ray::Ray;
 
 fn main() {
     let v1 = Vector3::new(1.0, 2.0, 3.0);
