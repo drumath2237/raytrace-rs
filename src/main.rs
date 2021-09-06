@@ -3,6 +3,7 @@ use crate::vector3::Vector3;
 
 mod ray;
 mod sphere;
+mod hit;
 
 use crate::ray::Ray;
 

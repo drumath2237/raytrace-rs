@@ -7,7 +7,7 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    fn new(origin: Vector3, radius: f64) -> Sphere {
+    pub fn new(origin: Vector3, radius: f64) -> Sphere {
         return Sphere { origin, radius };
     }
 }
