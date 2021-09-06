@@ -12,7 +12,7 @@ impl Ray {
     }
 
     pub fn t(&self, t: f64) -> Vector3 {
-        self.o + self.d * t
+        &self.o + &(&self.d * t)
     }
 }
 

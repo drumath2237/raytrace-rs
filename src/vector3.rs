@@ -8,12 +8,8 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
-    pub fn new(_x: f64, _y: f64, _z: f64) -> Vector3 {
-        return Vector3 {
-            x: _x,
-            y: _y,
-            z: _z,
-        };
+    pub fn new(x: f64, y: f64, z: f64) -> Vector3 {
+        return Vector3 { x, y, z };
     }
 
     pub fn zero() -> Vector3 {
@@ -48,10 +44,10 @@ impl Vector3 {
     }
 }
 
-impl ops::Add<Vector3> for Vector3 {
+impl ops::Add for &Vector3 {
     type Output = Vector3;
 
-    fn add(self, rhs: Vector3) -> Self::Output {
+    fn add(self, rhs: Self) -> Self::Output {
         return Vector3::new(
             self.x + rhs.x,
             self.y + rhs.y,
@@ -60,10 +56,10 @@ impl ops::Add<Vector3> for Vector3 {
     }
 }
 
-impl ops::Sub<Vector3> for Vector3 {
+impl ops::Sub for &Vector3 {
     type Output = Vector3;
 
-    fn sub(self, rhs: Vector3) -> Self::Output {
+    fn sub(self, rhs: Self) -> Self::Output {
         Vector3::new(
             self.x - rhs.x,
             self.y - rhs.y,
@@ -72,7 +68,7 @@ impl ops::Sub<Vector3> for Vector3 {
     }
 }
 
-impl ops::Mul<f64> for Vector3 {
+impl ops::Mul<f64> for &Vector3 {
     type Output = Vector3;
 
     fn mul(self, rhs: f64) -> Self::Output {
@@ -80,7 +76,7 @@ impl ops::Mul<f64> for Vector3 {
     }
 }
 
-impl ops::Div<f64> for Vector3 {
+impl ops::Div<f64> for &Vector3 {
     type Output = Vector3;
 
     fn div(self, rhs: f64) -> Self::Output {
@@ -97,14 +93,6 @@ impl std::cmp::PartialEq for Vector3 {
     }
 }
 
-impl Clone for Vector3 {
-    fn clone(&self) -> Self {
-        self::Vector3::new(self.x, self.y, self.z)
-    }
-}
-
-impl Copy for Vector3 {}
-
 #[cfg(test)]
 mod vector_test {
     use crate::vector3::Vector3;
@@ -119,7 +107,7 @@ mod vector_test {
         let v1 = Vector3::new(1.0, 2.0, 3.0);
         let v2 = Vector3::new(2.0, 3.0, 4.0);
 
-        assert_eq!(v1 + v2, Vector3::new(3.0, 5.0, 7.0));
+        assert_eq!(&v1 + &v2, Vector3::new(3.0, 5.0, 7.0));
     }
 
     #[test]
@@ -127,7 +115,7 @@ mod vector_test {
         let v1 = Vector3::new(1.0, 2.0, 3.0);
         let v2 = Vector3::new(1.0, 0.0, 0.0);
 
-        assert_eq!(v1 - v2, Vector3::new(0.0, 2.0, 3.0));
+        assert_eq!(&v1 - &v2, Vector3::new(0.0, 2.0, 3.0));
     }
 
     #[test]
@@ -171,13 +159,13 @@ mod vector_test {
     #[test]
     fn mul_test() {
         let v = Vector3::new(1.0, 2.0, 3.0);
-        assert_eq!(v * 3.0, Vector3::new(3.0, 6.0, 9.0));
+        assert_eq!(&v * 3.0, Vector3::new(3.0, 6.0, 9.0));
     }
 
     #[test]
     fn div_test() {
         let v = Vector3::new(3.0, 6.0, 9.0);
-        assert_eq!(v / 3.0, Vector3::new(1.0, 2.0, 3.0));
+        assert_eq!(&v / 3.0, Vector3::new(1.0, 2.0, 3.0));
     }
 }
 
