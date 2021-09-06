@@ -2,6 +2,8 @@ mod vector3;
 use crate::vector3::Vector3;
 
 mod ray;
+mod sphere;
+
 use crate::ray::Ray;
 
 fn main() {

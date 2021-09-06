@@ -1,6 +1,6 @@
 use crate::vector3::Vector3;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Ray {
     pub o: Vector3,
     pub d: Vector3,
@@ -13,12 +13,6 @@ impl Ray {
 
     pub fn t(&self, t: f64) -> Vector3 {
         &self.o + &(&self.d * t)
-    }
-}
-
-impl std::cmp::PartialEq for Ray {
-    fn eq(&self, other: &Self) -> bool {
-        self.d == other.d && self.o == other.o
     }
 }
 

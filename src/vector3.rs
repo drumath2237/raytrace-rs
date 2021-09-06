@@ -1,6 +1,6 @@
 use std::ops;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Vector3 {
     pub x: f64,
     pub y: f64,
@@ -81,15 +81,6 @@ impl ops::Div<f64> for &Vector3 {
 
     fn div(self, rhs: f64) -> Self::Output {
         Vector3::new(self.x / rhs, self.y / rhs, self.z / rhs)
-    }
-}
-
-impl std::cmp::PartialEq for Vector3 {
-    fn eq(&self, other: &Vector3) -> bool {
-        return
-            self.x == other.x
-                && self.y == other.y
-                && self.z == other.z;
     }
 }
 
