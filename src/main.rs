@@ -4,6 +4,7 @@ use crate::vector3::Vector3;
 mod ray;
 mod sphere;
 mod hit;
+mod intersect;
 
 use crate::ray::Ray;
 
