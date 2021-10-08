@@ -29,6 +29,10 @@ impl Vector3 {
         return l2.sqrt();
     }
 
+    pub fn length2(&self) -> f64 {
+        return self.x * self.x + self.y * self.y + self.z * self.z;
+    }
+
     pub fn dot(v1: &Vector3, v2: &Vector3) -> f64 {
         return v1.x * v2.x +
             v1.y * v2.y +
@@ -120,8 +124,16 @@ mod vector_test {
         assert_eq!(vec.length(), 0.0);
 
         let vec = Vector3::new(1.0, 1.0, 1.0);
-
         assert_eq!(vec.length(), (3.0 as f64).sqrt());
+    }
+
+    #[test]
+    fn length2_test() {
+        let vec = Vector3::zero();
+        assert_eq!(vec.length2(), 0.0);
+
+        let vec = Vector3::new(1.0, 1.0, 1.0);
+        assert_eq!(vec.length2(), (3.0 as f64));
     }
 
     #[test]
