@@ -17,16 +17,11 @@ impl Vector3 {
     }
 
     pub fn normalize(v: &Vector3) -> Vector3 {
-        return Vector3::new(
-            v.x / v.length(),
-            v.y / v.length(),
-            v.z / v.length(),
-        );
+        return v/v.length();
     }
 
     pub fn length(&self) -> f64 {
-        let l2 = self.x * self.x + self.y * self.y + self.z * self.z;
-        return l2.sqrt();
+        return self.length2().sqrt();
     }
 
     pub fn length2(&self) -> f64 {
@@ -125,6 +120,7 @@ mod vector_test {
 
         let vec = Vector3::new(1.0, 1.0, 1.0);
         assert_eq!(vec.length(), (3.0 as f64).sqrt());
+        assert_eq!(vec.length(), vec.length2().sqrt());
     }
 
     #[test]

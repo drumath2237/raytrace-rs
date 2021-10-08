@@ -1,6 +1,6 @@
 use crate::vector3::Vector3;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Ray {
     pub o: Vector3,
     pub d: Vector3,
