@@ -5,6 +5,7 @@ mod ray;
 mod sphere;
 mod hit;
 mod intersect;
+mod directionalLight;
 
 use crate::ray::Ray;
 
