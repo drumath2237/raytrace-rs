@@ -2,7 +2,6 @@ use crate::vector3::Vector3;
 
 #[derive(Debug, PartialEq)]
 pub struct DirectionalLight {
-    pub position: Vector3,
     pub direction: Vector3,
     pub intensity: f64,
 }
@@ -10,7 +9,6 @@ pub struct DirectionalLight {
 impl DirectionalLight {
     pub fn new(position: Vector3, direction: Vector3, intensity: f64) -> DirectionalLight {
         return DirectionalLight {
-            position,
             direction,
             intensity,
         };
@@ -18,7 +16,6 @@ impl DirectionalLight {
 
     pub fn new_one(position: Vector3, direction: Vector3) -> DirectionalLight {
         return DirectionalLight {
-            position,
             direction,
             intensity: 1.0,
         };
@@ -41,7 +38,6 @@ mod directional_light_test {
             DirectionalLight {
                 direction: d,
                 intensity: i,
-                position: p,
             }
         )
     }
@@ -56,7 +52,6 @@ mod directional_light_test {
             DirectionalLight {
                 direction: d,
                 intensity: 1.0,
-                position: p,
             }
         )
     }
