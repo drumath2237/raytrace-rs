@@ -1,4 +1,6 @@
 mod vector3;
+
+use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
 use crate::vector3::Vector3;
 
 mod ray;
@@ -10,10 +12,14 @@ mod directionalLight;
 use crate::ray::Ray;
 
 fn main() {
-    let v1 = Vector3::new(1.0, 2.0, 3.0);
-    let v2 = Vector3::new(2.0, 3.0, 4.0);
-    let d = &v1 + &v2;
-    let d = Vector3::dot(&v1, &v2);
-    println!("{:?}", v1);
+    let mut img: RgbImage = ImageBuffer::new(64, 64);
+
+    for x in 0..32 {
+        for y in 0..32 {
+            img.put_pixel(x, y, Rgb([255, 0, 255]))
+        }
+    }
+
+    let res = img.save_with_format("./images/image.png", ImageFormat::Png);
 }
 
