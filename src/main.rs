@@ -8,8 +8,11 @@ mod sphere;
 mod hit;
 mod intersect;
 mod directionalLight;
+mod png_image;
 
 use crate::ray::Ray;
+
+use std::fs;
 
 fn main() {
     let width = 64;
@@ -25,6 +28,12 @@ fn main() {
                 0
             ]))
         }
+    }
+
+    match fs::metadata("./images") {
+        Err(_)=> { fs::create_dir("./images"); },
+
+        _ => {}
     }
 
     let res = img.save_with_format("./images/image.png", ImageFormat::Png);
