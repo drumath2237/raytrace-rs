@@ -7,18 +7,15 @@ pub struct DirectionalLight {
 }
 
 impl DirectionalLight {
-    pub fn new(position: Vector3, direction: Vector3, intensity: f64) -> DirectionalLight {
+    pub fn new(direction: Vector3, intensity: f64) -> DirectionalLight {
         return DirectionalLight {
-            direction,
+            direction:Vector3::normalize(&direction),
             intensity,
         };
     }
 
-    pub fn new_one(position: Vector3, direction: Vector3) -> DirectionalLight {
-        return DirectionalLight {
-            direction,
-            intensity: 1.0,
-        };
+    pub fn new_one(direction: Vector3) -> DirectionalLight {
+        return DirectionalLight::new(direction, 1.0);
     }
 }
 
@@ -29,14 +26,13 @@ mod directional_light_test {
 
     #[test]
     fn new_test() {
-        let p = Vector3::new(1.0, 2.0, 3.0);
         let d = Vector3::new(1.0, 0.0, 0.0);
         let i = 2.0;
 
         assert_eq!(
-            DirectionalLight::new(p.clone(), d.clone(), i),
+            DirectionalLight::new(d.clone(), i),
             DirectionalLight {
-                direction: d,
+                direction: Vector3::normalize(&d),
                 intensity: i,
             }
         )
@@ -44,13 +40,12 @@ mod directional_light_test {
 
     #[test]
     fn new_one_test() {
-        let p = Vector3::new(1.0, 2.0, 3.0);
         let d = Vector3::new(1.0, 0.0, 0.0);
 
         assert_eq!(
-            DirectionalLight::new_one(p.clone(), d.clone()),
+            DirectionalLight::new_one(d.clone()),
             DirectionalLight {
-                direction: d,
+                direction: Vector3::normalize(&d),
                 intensity: 1.0,
             }
         )

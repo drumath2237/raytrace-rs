@@ -25,7 +25,7 @@ impl Vector3 {
     }
 
     pub fn length2(&self) -> f64 {
-        return self.x * self.x + self.y * self.y + self.z * self.z;
+        return Vector3::dot(&self, &self);
     }
 
     pub fn dot(v1: &Vector3, v2: &Vector3) -> f64 {
@@ -145,6 +145,8 @@ mod vector_test {
         let v2 = Vector3::new(2.0, 3.0, 4.0);
 
         assert_eq!(Vector3::dot(&v1, &v2), 2.0 + 6.0 + 12.0);
+
+        assert_eq!(Vector3::dot(&Vector3::zero(), &Vector3::zero()), 0.0);
     }
 
     #[test]
