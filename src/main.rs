@@ -1,8 +1,4 @@
 mod vector3;
-
-use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
-use crate::vector3::Vector3;
-
 mod ray;
 mod sphere;
 mod hit;
@@ -11,7 +7,8 @@ mod directionalLight;
 mod png_image;
 
 use crate::ray::Ray;
-
+use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
+use crate::vector3::Vector3;
 use std::fs;
 use crate::intersect::Intersect;
 use crate::sphere::Sphere;
@@ -41,13 +38,20 @@ fn main() {
                 None => Rgb([0, 0, 0]),
                 Some(hit) => {
                     let color
-                        = &(&hit.normal + &Vector3::new(1.0, 1.0, 1.0)) * 128.0;
+                        = &(&hit.normal * 128.0) + &Vector3::new(128.0, 128.0, 128.0);
                     Rgb([color.x as u8, color.y as u8, color.z as u8])
                 }
             };
 
             img.put_pixel(x, y, color);
         }
+    }
+
+    match std::fs::metadata("./images") {
+        Err(_) => {
+            std::fs::create_dir("./images");
+        }
+        Ok(_) => {}
     }
 
     img.save_with_format("./images/image.png", ImageFormat::Png);
