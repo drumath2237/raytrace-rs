@@ -2,7 +2,7 @@ use image::{ImageBuffer, ImageFormat, ImageResult, Rgb, RgbImage};
 
 #[derive(Debug)]
 pub struct PngImage {
-    imageBuffer: RgbImage,
+    image_buffer: RgbImage,
     pub width: u32,
     pub height: u32,
 }
@@ -12,20 +12,20 @@ impl PngImage {
         return PngImage {
             width,
             height,
-            imageBuffer: ImageBuffer::new(width, height),
+            image_buffer: ImageBuffer::new(width, height),
         };
     }
 
     pub fn save(&self, path: &str) -> ImageResult<()> {
-        self.imageBuffer.save_with_format(path, ImageFormat::Png)
+        self.image_buffer.save_with_format(path, ImageFormat::Png)
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, data: Rgb<u8>) {
-        self.imageBuffer.put_pixel(x, y, data);
+        self.image_buffer.put_pixel(x, y, data);
     }
 
     pub fn get_pixel(&self, x: u32, y: u32) -> &Rgb<u8> {
-        return self.imageBuffer.get_pixel(x, y);
+        return self.image_buffer.get_pixel(x, y);
     }
 }
 
@@ -40,8 +40,8 @@ mod png_image_test {
 
         assert_eq!(image.height, 64);
         assert_eq!(image.width, 64);
-        assert_eq!(image.imageBuffer.width(), 64);
-        assert_eq!(image.imageBuffer.height(), 64);
+        assert_eq!(image.image_buffer.width(), 64);
+        assert_eq!(image.image_buffer.height(), 64);
     }
 
     #[test]

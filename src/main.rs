@@ -13,29 +13,43 @@ mod png_image;
 use crate::ray::Ray;
 
 use std::fs;
+use crate::intersect::Intersect;
+use crate::sphere::Sphere;
 
 fn main() {
-    let width = 64;
-    let height = 64;
+    let width = 256;
+    let height = 256;
 
-    let mut img: RgbImage = ImageBuffer::new(64, 64);
+    let mut img: RgbImage = ImageBuffer::new(width, height);
 
-    for y in 0..height {
-        for x in 0..width {
-            img.put_pixel(x, y, Rgb([
-                (255 * x / width) as u8,
-                (255 * y / height) as u8,
-                0
-            ]))
+    let sphere = Sphere::unit();
+
+    for y in 0..img.height() {
+        for x in 0..img.width() {
+            let half_width = img.width() as f64 / 2.0;
+            let half_height = img.height() as f64 / 2.0;
+
+            let u = (x as f64 - half_width) / half_width;
+            let v = -(y as f64 - half_height) / half_height;
+
+            let ray = Ray::new(
+                Vector3::new(u, 5.0, v),
+                Vector3::new(0.0, -1.0, 0.0),
+            );
+
+            let color = match sphere.intersect(ray) {
+                None => Rgb([0, 0, 0]),
+                Some(hit) => {
+                    let color
+                        = &(&hit.normal + &Vector3::new(1.0, 1.0, 1.0)) * 128.0;
+                    Rgb([color.x as u8, color.y as u8, color.z as u8])
+                }
+            };
+
+            img.put_pixel(x, y, color);
         }
     }
 
-    match fs::metadata("./images") {
-        Err(_)=> { fs::create_dir("./images"); },
-
-        _ => {}
-    }
-
-    let res = img.save_with_format("./images/image.png", ImageFormat::Png);
+    img.save_with_format("./images/image.png", ImageFormat::Png);
 }
 
