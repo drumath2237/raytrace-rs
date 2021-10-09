@@ -1,5 +1,6 @@
 use image::{ImageBuffer, ImageFormat, Rgb, RgbImage};
 
+#[derive(Debug)]
 pub struct PngImage {
     imageBuffer: RgbImage,
     pub width: u32,
@@ -27,5 +28,20 @@ impl PngImage {
 
     pub fn get_pixel(&self, x: u32, y: u32) -> &Rgb<u8> {
         return self.imageBuffer.get_pixel(x, y);
+    }
+}
+
+#[cfg(test)]
+mod png_image_test{
+    use crate::png_image::PngImage;
+
+    #[test]
+    fn new_test(){
+        let image = PngImage::new(64,64);
+
+        assert_eq!(image.height, 64);
+        assert_eq!(image.width, 64);
+        assert_eq!(image.imageBuffer.width(), 64);
+        assert_eq!(image.imageBuffer.height(), 64);
     }
 }
