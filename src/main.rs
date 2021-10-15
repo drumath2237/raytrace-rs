@@ -3,7 +3,7 @@ mod ray;
 mod sphere;
 mod hit;
 mod intersect;
-mod directionalLight;
+mod directional_light;
 mod png_image;
 
 use crate::ray::Ray;

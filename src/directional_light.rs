@@ -21,7 +21,7 @@ impl DirectionalLight {
 
 #[cfg(test)]
 mod directional_light_test {
-    use crate::directionalLight::DirectionalLight;
+    use crate::directional_light::DirectionalLight;
     use crate::vector3::Vector3;
 
     #[test]
