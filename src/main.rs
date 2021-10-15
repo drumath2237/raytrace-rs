@@ -5,21 +5,24 @@ mod hit;
 mod intersect;
 mod directional_light;
 mod png_image;
+mod camera;
 
 use crate::ray::Ray;
 use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
 use crate::vector3::Vector3;
 use std::fs;
+use crate::camera::Camera;
 use crate::intersect::Intersect;
 use crate::sphere::Sphere;
 
 fn main() {
-    let width = 256;
-    let height = 256;
+    let width = 1920;
+    let height = 1080;
 
     let mut img: RgbImage = ImageBuffer::new(width, height);
 
-    let sphere = Sphere::unit();
+    let sphere_origin = Vector3::new(0.0, 0.0, 1.5);
+    let sphere = Sphere::new(sphere_origin, 1.0);
 
     for y in 0..img.height() {
         for x in 0..img.width() {
@@ -29,10 +32,8 @@ fn main() {
             let u = (x as f64 - half_width) / half_width;
             let v = -(y as f64 - half_height) / half_height;
 
-            let ray = Ray::new(
-                Vector3::new(u, 5.0, v),
-                Vector3::new(0.0, -1.0, 0.0),
-            );
+            let camera = Camera::default();
+            let ray = camera.camera_ray(u, v);
 
             let color = match sphere.intersect(ray) {
                 None => Rgb([0, 0, 0]),
