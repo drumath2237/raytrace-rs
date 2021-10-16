@@ -23,7 +23,10 @@ mod sphere_test {
 
     #[test]
     fn new_test() {
-        assert_eq!(Sphere::new(Vector3::new(0.0, 0.0, 0.0), 1.0), Sphere { origin: Vector3::zero(), radius: 1.0 });
+        assert_eq!(
+            Sphere::new(Vector3::new(0.0, 0.0, 0.0), 1.0),
+            Sphere { origin: Vector3::zero(), radius: 1.0 }
+        );
     }
 
     #[test]

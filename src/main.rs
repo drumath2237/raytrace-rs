@@ -7,12 +7,12 @@ mod directional_light;
 mod png_image;
 mod camera;
 mod scene;
+mod material;
 
 use crate::ray::Ray;
 use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
 use crate::vector3::Vector3;
 use std::fs;
-use image::hdr::rgbe8;
 use crate::camera::Camera;
 use crate::directional_light::DirectionalLight;
 use crate::intersect::Intersect;
