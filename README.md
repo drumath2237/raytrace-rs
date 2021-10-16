@@ -1,10 +1,12 @@
-# raytrace-rs (WIP)
+# raytrace-rs
 
 [![Rust](https://github.com/drumath2237/raytrace-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/drumath2237/raytrace-rs/actions/workflows/rust.yml)
 
 ## About
 
-Rustの入門をしたので、勉強としてレイトレーサを作ってみるプロジェクト。
+Rustの勉強として作った古典的レイトレーサ―
+
+![img](./docs/image.png)
 
 ## Environment
 
