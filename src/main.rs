@@ -6,6 +6,7 @@ mod intersect;
 mod directional_light;
 mod png_image;
 mod camera;
+mod scene;
 
 use crate::ray::Ray;
 use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};

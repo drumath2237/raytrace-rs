@@ -1,6 +1,6 @@
 use crate::vector3::Vector3;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct DirectionalLight {
     pub direction: Vector3,
     pub intensity: f64,
