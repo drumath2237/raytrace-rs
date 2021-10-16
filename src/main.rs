@@ -12,6 +12,7 @@ use crate::ray::Ray;
 use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
 use crate::vector3::Vector3;
 use std::fs;
+use image::hdr::rgbe8;
 use crate::camera::Camera;
 use crate::directional_light::DirectionalLight;
 use crate::intersect::Intersect;
@@ -25,23 +26,21 @@ fn main() {
 
     let mut img = PngImage::new(width, height);
 
-    let light = DirectionalLight::new(Vector3::zero(), 1.0);
+    let light = DirectionalLight::new(Vector3::new(1., -1., 1.), 1.0);
 
     let mut scene = Scene::new(light.clone());
 
-    scene.spheres.push(Sphere::new(
-        Vector3::new(0.7, 0., 2.), 1.0,
-    ));
+    scene.spheres.push(Sphere::new(Vector3::new(0.7, 1.0, 2.), 1.0));
+    scene.spheres.push(Sphere::new(Vector3::new(-0.7, 0.2, 2.), 0.2));
+    scene.spheres.push(Sphere::new(Vector3::new(0., -100000.0, 0.), 100000.0));
 
-    scene.spheres.push(Sphere::new(
-        Vector3::new(-0.7, 0., 2.), 1.0,
-    ));
+    let camera = Camera::new(
+        Vector3::new(0., 0.5, 0.),
+        width as f64 / height as f64,
+        60.0,
+    );
 
-    scene.spheres.push(Sphere::new(
-        Vector3::new(0., -100000.0 - 1.0, 2.0), 100000.0,
-    ));
-
-    let camera = Camera::default();
+    let brdf = 0.8;// std::f64::consts::PI;
 
     for y in 0..img.height {
         for x in 0..img.width {
@@ -53,12 +52,20 @@ fn main() {
 
             let ray = camera.camera_ray(u, v);
 
-            let color = match scene.intersect(ray) {
+            let color = match scene.intersect(ray.clone()) {
                 None => Rgb([0, 0, 0]),
                 Some(hit) => {
-                    let color
-                        = &(&hit.normal * 128.0) + &Vector3::new(128.0, 128.0, 128.0);
-                    Rgb([color.x as u8, color.y as u8, color.z as u8])
+                    let position = ray.clone().t(hit.t);
+                    let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &light.clone().direction * -1.0);
+
+                    match scene.intersect(shadow_ray.clone()) {
+                        Some(_) => Rgb([0, 0, 0]),
+                        None => {
+                            let cos_value = Vector3::dot(&shadow_ray.d, &hit.normal);
+                            let radiance = cos_value * brdf * 256.0;
+                            Rgb([radiance as u8, radiance as u8, radiance as u8])
+                        }
+                    }
                 }
             };
 
@@ -73,13 +80,13 @@ fn main() {
         Ok(_) => {}
     }
 
-     match img.save("./images/image.png"){
-         Err(E)=>{
-             println!("{:?}", E)
-         },
-         Ok(_)=>{
-             println!("done.")
-         }
-     };
+    match img.save("./images/image.png") {
+        Err(E) => {
+            println!("{:?}", E)
+        }
+        Ok(_) => {
+            println!("done.")
+        }
+    };
 }
 
