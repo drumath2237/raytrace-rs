@@ -31,7 +31,9 @@ fn main() {
     let mut scene = Scene::new(light.clone());
 
     scene.spheres.push(Sphere::new(Vector3::new(0.7, 1.0, 2.), 1.0));
-    scene.spheres.push(Sphere::new(Vector3::new(-0.7, 0.2, 2.), 0.2));
+    scene.spheres.push(Sphere::new(Vector3::new(-1.7, 0.2, 2.), 0.2));
+    scene.spheres.push(Sphere::new(Vector3::new(-0.4, 0.5, 1.6), 0.5));
+    scene.spheres.push(Sphere::new(Vector3::new(1.0, 0.3, 1.), 0.3));
     scene.spheres.push(Sphere::new(Vector3::new(0., -100000.0, 0.), 100000.0));
 
     let camera = Camera::new(
