@@ -37,6 +37,9 @@ fn main() {
     let diffuse_yellow = Diffuse(Color3::new(0.7, 0.8, 0.2));
     let specular_material = Specular;
 
+    let skybox_color = Color3::new(0.3, 0.6, 0.8);
+    let skybox = Rgb([(skybox_color.x * 256.) as u8, (skybox_color.y * 256.) as u8, (skybox_color.z * 256.) as u8]);
+
     scene.spheres.push(Sphere::new(Vector3::new(0.7, 1.0, 2.), 1.0, diffuse_white.clone()));
     scene.spheres.push(Sphere::new(Vector3::new(-1.7, 0.2, 2.), 0.2, diffuse_blue.clone()));
     scene.spheres.push(Sphere::new(Vector3::new(-0.4, 0.5, 1.6), 0.5, diffuse_yellow.clone()));
@@ -62,7 +65,7 @@ fn main() {
             let ray = camera.camera_ray(u, v);
 
             let color = match scene.intersect(ray.clone()) {
-                None => Rgb([0, 0, 0]),
+                None => skybox.clone(),
                 Some(hit) => {
                     let position = ray.clone().t(hit.t);
                     let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &scene.light.clone().direction * -1.0);
@@ -72,7 +75,7 @@ fn main() {
                         None => {
                             let cos_value = Vector3::dot(&shadow_ray.d, &hit.normal);
                             let radiance = cos_value * brdf * 256.0;
-                            let color: Color3 = match hit.material {
+                            let color_material: Color3 = match hit.material {
                                 Diffuse(col) => {
                                     &col * radiance
                                 }
@@ -80,7 +83,7 @@ fn main() {
                                     Color3::new(radiance, radiance, radiance)
                                 }
                             };
-                            Rgb([color.x as u8, color.y as u8, color.z as u8])
+                            Rgb([color_material.x as u8, color_material.y as u8, color_material.z as u8])
                         }
                     }
                 }
@@ -98,12 +101,8 @@ fn main() {
     }
 
     match img.save("./images/image.png") {
-        Err(E) => {
-            println!("{:?}", E)
-        }
-        Ok(_) => {
-            println!("done.")
-        }
+        Err(E) => { println!("{:?}", E) }
+        Ok(_) => { println!("done.") }
     };
 }
 
