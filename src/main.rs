@@ -13,21 +13,22 @@ use crate::vector3::Vector3;
 use std::fs;
 use crate::camera::Camera;
 use crate::intersect::Intersect;
+use crate::png_image::PngImage;
 use crate::sphere::Sphere;
 
 fn main() {
     let width = 1920;
     let height = 1080;
 
-    let mut img: RgbImage = ImageBuffer::new(width, height);
+    let mut img = PngImage::new(width, height);
 
     let sphere_origin = Vector3::new(0.0, 0.0, 1.5);
     let sphere = Sphere::new(sphere_origin, 1.0);
 
-    for y in 0..img.height() {
-        for x in 0..img.width() {
-            let half_width = img.width() as f64 / 2.0;
-            let half_height = img.height() as f64 / 2.0;
+    for y in 0..img.height {
+        for x in 0..img.width {
+            let half_width = img.width as f64 / 2.0;
+            let half_height = img.height as f64 / 2.0;
 
             let u = (x as f64 - half_width) / half_width;
             let v = -(y as f64 - half_height) / half_height;
@@ -44,7 +45,7 @@ fn main() {
                 }
             };
 
-            img.put_pixel(x, y, color);
+            img.set_pixel(x,y,color);
         }
     }
 
@@ -55,6 +56,6 @@ fn main() {
         Ok(_) => {}
     }
 
-    img.save_with_format("./images/image.png", ImageFormat::Png);
+    img.save("./images/image.png");
 }
 

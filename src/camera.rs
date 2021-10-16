@@ -30,3 +30,47 @@ impl Camera {
         return Ray::new(self.position.clone(), &self.position.clone() + &direction);
     }
 }
+
+#[cfg(test)]
+mod camera_test {
+    use crate::intersect::Intersect;
+    use crate::sphere::Sphere;
+    use super::*;
+
+    #[test]
+    fn new_test() {
+        let position = Vector3::new(1.0, 1.0, 2.0);
+        let camera = Camera::new(position.clone(), 1.0, 1.0);
+
+        assert_eq!(camera, Camera::new(
+            position.clone(),
+            1.0, 1.0,
+        ));
+    }
+
+    #[test]
+    fn default_test() {
+        let default_camera = Camera::default();
+        let camera = Camera::new(Vector3::zero(), 16.0 / 9.0, 60.0);
+
+        assert_eq!(default_camera, camera);
+
+        let square_camera = Camera::default_square();
+        let camera = Camera::new(Vector3::zero(), 1.0, 60.);
+
+        assert_eq!(square_camera, camera);
+    }
+
+    #[test]
+    fn camera_ray_test(){
+        let default_camera = Camera::default();
+        let small_sphere = Sphere::new(Vector3::new(0., 0., 5.), 1.0);
+
+        let intersect_res = small_sphere.intersect(default_camera.camera_ray(-1., 1.));
+        assert_eq!(intersect_res, None);
+
+        let intersect_res = small_sphere.intersect(default_camera.camera_ray(0., 0.));
+        assert_ne!(intersect_res, None);
+
+    }
+}
