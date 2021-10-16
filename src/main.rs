@@ -13,18 +13,35 @@ use image::{RgbImage, Rgb, ImageFormat, ImageBuffer};
 use crate::vector3::Vector3;
 use std::fs;
 use crate::camera::Camera;
+use crate::directional_light::DirectionalLight;
 use crate::intersect::Intersect;
 use crate::png_image::PngImage;
+use crate::scene::Scene;
 use crate::sphere::Sphere;
 
 fn main() {
-    let width = 1920;
-    let height = 1080;
+    let width = 960;
+    let height = 540;
 
     let mut img = PngImage::new(width, height);
 
-    let sphere_origin = Vector3::new(0.0, 0.0, 1.5);
-    let sphere = Sphere::new(sphere_origin, 1.0);
+    let light = DirectionalLight::new(Vector3::zero(), 1.0);
+
+    let mut scene = Scene::new(light.clone());
+
+    scene.spheres.push(Sphere::new(
+        Vector3::new(0.7, 0., 2.), 1.0,
+    ));
+
+    scene.spheres.push(Sphere::new(
+        Vector3::new(-0.7, 0., 2.), 1.0,
+    ));
+
+    scene.spheres.push(Sphere::new(
+        Vector3::new(0., -100000.0 - 1.0, 2.0), 100000.0,
+    ));
+
+    let camera = Camera::default();
 
     for y in 0..img.height {
         for x in 0..img.width {
@@ -34,10 +51,9 @@ fn main() {
             let u = (x as f64 - half_width) / half_width;
             let v = -(y as f64 - half_height) / half_height;
 
-            let camera = Camera::default();
             let ray = camera.camera_ray(u, v);
 
-            let color = match sphere.intersect(ray) {
+            let color = match scene.intersect(ray) {
                 None => Rgb([0, 0, 0]),
                 Some(hit) => {
                     let color
@@ -46,7 +62,7 @@ fn main() {
                 }
             };
 
-            img.set_pixel(x,y,color);
+            img.set_pixel(x, y, color);
         }
     }
 
@@ -57,6 +73,13 @@ fn main() {
         Ok(_) => {}
     }
 
-    img.save("./images/image.png");
+     match img.save("./images/image.png"){
+         Err(E)=>{
+             println!("{:?}", E)
+         },
+         Ok(_)=>{
+             println!("done.")
+         }
+     };
 }
 

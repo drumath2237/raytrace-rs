@@ -32,7 +32,7 @@ impl Intersect for Sphere {
         let position = ray.t(t);
         let normal = &position - &self.origin;
 
-        return Some(Hit { t, position, normal });
+        return Some(Hit::new(position, normal, t));
     }
 }
 
@@ -98,7 +98,7 @@ mod intersect_test {
         );
         let result = s.intersect(ray.clone());
         assert_eq!(result, None);
-
+        
     }
 
     #[test]
