@@ -44,6 +44,8 @@ fn main() {
     scene.spheres.push(Sphere::new(Vector3::new(-1.7, 0.2, 2.), 0.2, diffuse_blue.clone()));
     scene.spheres.push(Sphere::new(Vector3::new(-0.4, 0.5, 1.6), 0.5, diffuse_yellow.clone()));
     scene.spheres.push(Sphere::new(Vector3::new(1.0, 0.3, 1.), 0.3, diffuse_blue.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(0.4, 0.25, 1.), 0.25, specular_material.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(0., 0.1, 1.2), 0.1, specular_material.clone()));
     scene.spheres.push(Sphere::new(Vector3::new(0., -100000.0, 0.), 100000.0, diffuse_white.clone()));
 
     let camera = Camera::new(
@@ -64,32 +66,11 @@ fn main() {
 
             let ray = camera.camera_ray(u, v);
 
-            let color = match scene.intersect(ray.clone()) {
-                None => skybox.clone(),
-                Some(hit) => {
-                    let position = ray.clone().t(hit.t);
-                    let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &scene.light.clone().direction * -1.0);
+            let color = trace(&scene, ray, 5);
 
-                    match scene.intersect(shadow_ray.clone()) {
-                        Some(_) => Rgb([0, 0, 0]),
-                        None => {
-                            let cos_value = Vector3::dot(&shadow_ray.d, &hit.normal);
-                            let radiance = cos_value * brdf * 256.0;
-                            let color_material: Color3 = match hit.material {
-                                Diffuse(col) => {
-                                    &col * radiance
-                                }
-                                Specular => {
-                                    Color3::new(radiance, radiance, radiance)
-                                }
-                            };
-                            Rgb([color_material.x as u8, color_material.y as u8, color_material.z as u8])
-                        }
-                    }
-                }
-            };
+            let rgb = Rgb([color.x as u8, color.y as u8, color.z as u8]);
 
-            img.set_pixel(x, y, color);
+            img.set_pixel(x, y, rgb);
         }
     }
 
@@ -103,6 +84,42 @@ fn main() {
     match img.save("./images/image.png") {
         Err(E) => { println!("{:?}", E) }
         Ok(_) => { println!("done.") }
+    };
+}
+
+fn trace(scene: &Scene, ray: Ray, reflection_time: i32) -> Color3 {
+    let skybox_color = &Color3::new(0.3, 0.6, 0.8) * 256.;
+
+    if reflection_time <= 0 { return Color3::zero(); }
+
+    return match scene.intersect(ray.clone()) {
+        None => skybox_color,
+        Some(hit) => {
+            let position = ray.clone().t(hit.t);
+            let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &scene.light.clone().direction * -1.0);
+
+            let brdf = 0.8;
+
+            match scene.intersect(shadow_ray.clone()) {
+                Some(_) => Color3::zero(),
+                None => {
+                    let cos_value = Vector3::dot(&shadow_ray.d, &hit.normal);
+                    let radiance = cos_value * brdf * 256.0;
+                    match hit.material {
+                        Diffuse(col) => {
+                            &col * radiance
+                        }
+                        Specular => {
+                            let reflect_direction = &ray.d + &(&hit.normal * (Vector3::dot(&(&ray.d * -1.), &hit.normal) * 2.));
+                            let hit_pos = &ray.t(hit.t)+ &(&hit.normal * 0.01);
+                            let reflection_ray = Ray::new(hit_pos, reflect_direction);
+
+                            return trace(scene, reflection_ray , reflection_time - 1);
+                        }
+                    }
+                }
+            }
+        }
     };
 }
 
