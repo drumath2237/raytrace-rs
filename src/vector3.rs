@@ -17,7 +17,7 @@ impl Vector3 {
     }
 
     pub fn normalize(v: &Vector3) -> Vector3 {
-        return v/v.length();
+        return v / v.length();
     }
 
     pub fn length(&self) -> f64 {
@@ -75,6 +75,14 @@ impl ops::Mul<f64> for &Vector3 {
     }
 }
 
+impl ops::Mul<&Vector3> for &Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: &Vector3) -> Self::Output {
+        Vector3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
+    }
+}
+
 impl ops::Div<f64> for &Vector3 {
     type Output = Vector3;
 
@@ -85,6 +93,7 @@ impl ops::Div<f64> for &Vector3 {
 
 #[cfg(test)]
 mod vector_test {
+    use std::ops::Mul;
     use crate::vector3::Vector3;
 
     #[test]
@@ -161,6 +170,9 @@ mod vector_test {
     fn mul_test() {
         let v = Vector3::new(1.0, 2.0, 3.0);
         assert_eq!(&v * 3.0, Vector3::new(3.0, 6.0, 9.0));
+
+        let v_mul = Vector3::new(1., 2., 3.);
+        assert_eq!(&v * &v_mul, Vector3::new(1., 4., 9.));
     }
 
     #[test]

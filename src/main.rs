@@ -16,6 +16,8 @@ use std::fs;
 use crate::camera::Camera;
 use crate::directional_light::DirectionalLight;
 use crate::intersect::Intersect;
+use crate::material::Color3;
+use crate::material::Material::{Diffuse, Specular};
 use crate::png_image::PngImage;
 use crate::scene::Scene;
 use crate::sphere::Sphere;
@@ -30,11 +32,16 @@ fn main() {
 
     let mut scene = Scene::new(light.clone());
 
-    scene.spheres.push(Sphere::new(Vector3::new(0.7, 1.0, 2.), 1.0));
-    scene.spheres.push(Sphere::new(Vector3::new(-1.7, 0.2, 2.), 0.2));
-    scene.spheres.push(Sphere::new(Vector3::new(-0.4, 0.5, 1.6), 0.5));
-    scene.spheres.push(Sphere::new(Vector3::new(1.0, 0.3, 1.), 0.3));
-    scene.spheres.push(Sphere::new(Vector3::new(0., -100000.0, 0.), 100000.0));
+    let diffuse_white = Diffuse(Color3::new(1., 1., 1.));
+    let diffuse_blue = Diffuse(Color3::new(0.05, 0.5, 0.8));
+    let diffuse_yellow = Diffuse(Color3::new(0.7, 0.8, 0.2));
+    let specular_material = Specular;
+
+    scene.spheres.push(Sphere::new(Vector3::new(0.7, 1.0, 2.), 1.0, diffuse_white.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(-1.7, 0.2, 2.), 0.2, diffuse_blue.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(-0.4, 0.5, 1.6), 0.5, diffuse_yellow.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(1.0, 0.3, 1.), 0.3, diffuse_blue.clone()));
+    scene.spheres.push(Sphere::new(Vector3::new(0., -100000.0, 0.), 100000.0, diffuse_white.clone()));
 
     let camera = Camera::new(
         Vector3::new(0., 0.5, 0.),
@@ -42,7 +49,7 @@ fn main() {
         60.0,
     );
 
-    let brdf = 0.8;// std::f64::consts::PI;
+    let brdf = 0.8;
 
     for y in 0..img.height {
         for x in 0..img.width {
@@ -58,14 +65,22 @@ fn main() {
                 None => Rgb([0, 0, 0]),
                 Some(hit) => {
                     let position = ray.clone().t(hit.t);
-                    let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &light.clone().direction * -1.0);
+                    let shadow_ray = Ray::new(&position + &((&hit.normal) * 0.01), &scene.light.clone().direction * -1.0);
 
                     match scene.intersect(shadow_ray.clone()) {
                         Some(_) => Rgb([0, 0, 0]),
                         None => {
                             let cos_value = Vector3::dot(&shadow_ray.d, &hit.normal);
                             let radiance = cos_value * brdf * 256.0;
-                            Rgb([radiance as u8, radiance as u8, radiance as u8])
+                            let color: Color3 = match hit.material {
+                                Diffuse(col) => {
+                                    &col * radiance
+                                }
+                                Specular => {
+                                    Color3::new(radiance, radiance, radiance)
+                                }
+                            };
+                            Rgb([color.x as u8, color.y as u8, color.z as u8])
                         }
                     }
                 }

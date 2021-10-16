@@ -1,6 +1,7 @@
 use std::cmp::max;
 use crate::ray::Ray;
 use crate::hit::Hit;
+use crate::material::Material::Specular;
 use crate::scene::Scene;
 use crate::sphere::Sphere;
 use crate::vector3::Vector3;
@@ -32,13 +33,13 @@ impl Intersect for Sphere {
         let position = ray.t(t);
         let normal = &position - &self.origin;
 
-        return Some(Hit::new(position, normal, t));
+        return Some(Hit::new(position, normal, t, self.material.clone()));
     }
 }
 
 impl Intersect for Scene {
     fn intersect(&self, ray: Ray) -> Option<Hit> {
-        let mut min_hit = Hit::new(Vector3::zero(), Vector3::zero(), f64::MAX);
+        let mut min_hit = Hit::new(Vector3::zero(), Vector3::zero(), f64::MAX, Specular);
 
         for sphere in &self.spheres {
             match sphere.intersect(ray.clone()) {

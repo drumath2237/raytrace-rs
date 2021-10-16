@@ -34,6 +34,8 @@ impl Camera {
 #[cfg(test)]
 mod camera_test {
     use crate::intersect::Intersect;
+    use crate::material::Color3;
+    use crate::material::Material::Diffuse;
     use crate::sphere::Sphere;
     use super::*;
 
@@ -62,15 +64,17 @@ mod camera_test {
     }
 
     #[test]
-    fn camera_ray_test(){
+    fn camera_ray_test() {
         let default_camera = Camera::default();
-        let small_sphere = Sphere::new(Vector3::new(0., 0., 5.), 1.0);
+        let small_sphere = Sphere::new(
+            Vector3::new(0., 0., 5.), 1.0,
+            Diffuse(Color3::zero()),
+        );
 
         let intersect_res = small_sphere.intersect(default_camera.camera_ray(-1., 1.));
         assert_eq!(intersect_res, None);
 
         let intersect_res = small_sphere.intersect(default_camera.camera_ray(0., 0.));
         assert_ne!(intersect_res, None);
-
     }
 }
